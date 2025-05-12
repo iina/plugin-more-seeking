@@ -1,0 +1,18 @@
+{
+  "name": "More Seeking",
+  "identifier": "io.iina.plugin.seeking",
+  "version": "1.0.0",
+  "description": "Add more seeking options to IINA.",
+  "ghRepo": "iina/plugin-more-seeking",
+  "ghVersion": 8,
+  "author": {
+    "name": "IINA Developers",
+    "email": "developers@iina.io",
+    "url": "https://iina.io"
+  },
+  "entry": "dist/index.js",
+  "permissions": ["show-osd", "video-overlay"],
+  "allowedDomains": ["*"],
+  "preferencesPage": "pref.html",
+  "preferenceDefaults": {}
+}

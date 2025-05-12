@@ -1,0 +1,11 @@
+{
+  "lib": ["es6", "es7", "esnext"],
+  "compilerOptions": {
+    "types": [],
+    "typeRoots": ["./node_modules/iina-plugin-definition"]
+  },
+  "include": [
+    "src/**/*",
+    "./node_modules/iina-plugin-definition/iina/**/*.d.ts"
+  ]
+}
