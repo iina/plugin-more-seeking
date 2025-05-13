@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "serve-overlay": "parcel serve ui/overlay/index.html --dist-dir dist/ui/overlay",
-    "build": "rm -rf dist && parcel build .",
+    "build": "rm -rf .parcel-cache && rm -rf dist && parcel build .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
