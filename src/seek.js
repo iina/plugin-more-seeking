@@ -4,6 +4,8 @@ const TIMEOUT = 150;
 
 const SEEK_SPEED = 2;
 
+const KEYBOARD_SHORTCUT = "s";
+
 const IDLE = 0;
 const WAITING = 1;
 const SEEKING = 2;
@@ -17,12 +19,18 @@ export class SeekModule {
     });
 
     this.bindMouseInputListeners();
+    this.bindKeyboardInputListeners();
   }
 
   bindMouseInputListeners() {
     this.#bindMouseDown();
     this.#bindMouseUp();
     this.#bindMouseDrag();
+  }
+
+  bindKeyboardInputListeners(){
+    this.#bindKeyDown();
+    this.#bindKeyUp();
   }
 
   #bindMouseDown() {
@@ -48,6 +56,25 @@ export class SeekModule {
       this.#cancelSeek();
     });
   }
+
+  #bindKeyDown() {
+    input.onKeyDown(KEYBOARD_SHORTCUT, () => {
+      console.log("Key Down");
+
+      this.#initSeek();
+      input.onKeyDown(KEYBOARD_SHORTCUT, () => { return true; });
+    })
+  }
+
+  #bindKeyUp() {
+    input.onKeyUp(KEYBOARD_SHORTCUT, () => {
+      console.log("Key Up");
+
+      this.#cancelSeek();
+      this.#bindKeyDown();
+    })
+  }
+
 
   #initSeek(x,y) {
     // only start seeking if the player is not paused
