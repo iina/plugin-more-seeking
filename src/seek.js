@@ -4,6 +4,8 @@ const TIMEOUT = 150;
 
 const SEEK_SPEED = 2;
 
+const KEYBOARD_SHORTCUT = "s";
+
 const IDLE = 0;
 const WAITING = 1;
 const SEEKING = 2;
@@ -16,8 +18,63 @@ export class SeekModule {
       overlay.loadFile("dist/ui/overlay/index.html");
     });
 
-    this.addInputListeners();
+    this.bindMouseInputListeners();
+    this.bindKeyboardInputListeners();
   }
+
+  bindMouseInputListeners() {
+    this.#bindMouseDown();
+    this.#bindMouseUp();
+    this.#bindMouseDrag();
+  }
+
+  bindKeyboardInputListeners(){
+    this.#bindKeyDown();
+    this.#bindKeyUp();
+  }
+
+  #bindMouseDown() {
+    input.onMouseDown(input.MOUSE, (e) => {
+      console.log("Mouse Down");
+
+      this.#initSeek(e.x, e.y);
+    });
+  }
+
+  #bindMouseUp() {
+    input.onMouseUp(input.MOUSE, () => {
+      console.log("Mouse Up");
+
+      this.#cancelSeek();
+    });
+  }
+
+  #bindMouseDrag(){
+    input.onMouseDrag(input.MOUSE, () => {
+      console.log("Mouse Drag");
+
+      this.#cancelSeek();
+    });
+  }
+
+  #bindKeyDown() {
+    input.onKeyDown(KEYBOARD_SHORTCUT, () => {
+      console.log("Key Down");
+
+      this.#initSeek();
+      input.onKeyDown(KEYBOARD_SHORTCUT, () => { return true; });
+    })
+  }
+
+  #bindKeyUp() {
+    input.onKeyUp(KEYBOARD_SHORTCUT, () => {
+      console.log("Key Up");
+
+      this.#cancelSeek();
+      this.#bindKeyDown();
+    })
+  }
+
 
   #initSeek(x,y) {
     // only start seeking if the player is not paused
@@ -30,14 +87,14 @@ export class SeekModule {
     // show the overlay after a timeout.
     setTimeout(() => {
       // if the window is acturally dragged, cancel the seek
-      if (this.status != WAITING) {
+      if (this.status !== WAITING) {
         return;
       }
 
       this.status = SEEKING;
 
       overlay.show();
-      overlay.postMessage("mousePos", { x, y });
+      overlay.postMessage("showIndicator", { x, y });
 
       this.#startSeek();
     }, TIMEOUT);
@@ -62,26 +119,5 @@ export class SeekModule {
     }
     this.status = IDLE;
     overlay.hide();
-  }
-
-  addInputListeners() {
-    input.onMouseDown(input.MOUSE, (e) => {
-      console.log("Mouse Down");
-
-      const { x, y } = e;
-      this.#initSeek(x, y);
-    });
-
-    input.onMouseUp(input.MOUSE, () => {
-      console.log("Mouse Up");
-
-      this.#cancelSeek();
-    });
-
-    input.onMouseDrag(input.MOUSE, () => {
-      console.log("Mouse Drag");
-
-      this.#cancelSeek();
-    });
   }
 }
